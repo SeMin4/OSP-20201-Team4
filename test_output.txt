@@ -1,0 +1,6 @@
+http://attic.apache.org/
+https://projects.apache.org/projects.html?category#big-data
+https://projects.apache.org/projects.html?category#build-management
+https://projects.apache.org/projects.html?category#cloud
+https://projects.apache.org/projects.html?category#network-client
+https://projects.apache.org/projects.html?category#sql
