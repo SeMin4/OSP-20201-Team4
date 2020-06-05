@@ -24,11 +24,12 @@ word_d = {}
 
 def del_symbols(my_lines):
 	marks = [',', '!',':','.','#','$','%','^','&','*','(',')','+','-','/','[',']','{','}','\\','\'',';','<','>','0','1','2','3','4','5','6','7','8','9','\n','"','’','_','~','?','|','@','©']
-
+	h = 0
 	lines_list =[]
-	for lines in my_lines:
-		line = lines.text
-		lines_list.append(line)
+	for text in my_lines:
+		#line = lines.text
+		lines_list.append(text)
+		h = h+1
 
 	for i in range(len(lines_list)):
 		for mark in marks:
@@ -38,12 +39,18 @@ def del_symbols(my_lines):
 
 def del_stopwords(lines_list):
 	
-	bef_str = str(lines_list[0])
-	print("list 를 string으로 바꾼 문자열 ",bef_str)
+	string=""
+	for i in range(len(lines_list)):
+		string = string + str(lines_list[i])
+	
+
+	#print("list 를 string으로 바꾼 문자열 ",string)
 	swlist = []	#stopwords list
 	for sw in stopwords.words("english"):
 		swlist.append(sw)
-	tokenized = word_tokenize(bef_str)
+	
+	
+	tokenized = word_tokenize(string)
 	
 	result = []	
 	for w in tokenized:
@@ -77,62 +84,58 @@ def add_word(wlist):
 		word_d[w] +=1
 
 
-def compute_tf(s):
-	bow = set()
-	wordcount_d = {}
-	
-	tokenized = word_tokenize(s)
-	for tok in tokenized:
-		if tok not in wordcount_d.keys():
-			wordcount_d[tok]=0
-		wordcount_d[tok]+=1
-		bow.add(tok)
-	tf_d = {}
-	for word,count in wordcount_d.items():
-		tf_d[word] = count/float(len(bow))
-	
-	return tf_d
 
-def compute_idf():
-	Dval = len(sent_list)
-	
-	bow = set()
-	
-	for i in range(0,len(sent_list)):
-		tokenized = word_tokenize(sent_list[i])
-		for tok in tokenized:
-			bow.add(tok)
-	idf_d={}
-	for t in bow:
-		cnt=0
-		for s in sent_list:
-			if t in word_tokenize(s):
-				cnt += 1
-		idf_d[t] = math.log(Dval/float(cnt))	#pdf랑다름
-
-
-	return idf_d
-	
-#def compute_tfidf():
 			
 		
 if __name__ == '__main__':
 
-	idvalue=0
+	idvalue=1
 	f1 = open('test_input.txt','r')
-	f2 = open('test_output.txt','a')
+	
+	urllist = []
+	try:
+		f2 = open('test_output.txt','r')
+		try:
+			for url in f2:
+				urllist.append(url.strip())
+		finally:			
+			f2.close()
+	except IOError:
+		print('test_output.txt 파일이 존재하지 않음')
+	
+	f2 = open('test_output.txt','a')	
+	
+	url_cur_list = []
+	
 	#여기서부터 밑의 주석까지 반복문처리 
 	for url in f1:
-		idvalue = idvalue+1
 		start = process_timer()		
 		#urladdress = 'u'+'\''+url.strip()+'\''		
 		urladdress = url.strip()
 		ress = requests.get(urladdress)	#에러가 발생하지 않으면 f2에 url쓰기
-		f2.write(url)
+		if urladdress not in url_cur_list:			
+			if urladdress not in urllist:		
+				f2.write(url)
+				url_cur_list.append(urladdress)
+			else:
+				print("중복된 url")
+				continue
+				
+		else:
+			print("중복된 url")
+			continue
+
+			
+
 		html = BeautifulSoup(ress.content, "html.parser")
-		content = html.select('body')
+		#content = html.select('body')
+		content = html.findAll(text = True)
+		#print(content)
+		#print("-------------------------------------------")
 		list1 = del_symbols(content)
+		#print(list1)
 		list1 = del_stopwords(list1)
+			
 		#print( "stopwords를 제거한 단어 list",list1)	
 		add_word(list1)	
 		end = process_timer()
@@ -150,7 +153,8 @@ if __name__ == '__main__':
 		words.clear()
 		frequencies.clear()
 		word_d.clear()
-
+		idvalue = idvalue+1
+		
 		###
 	
 	f1.close()
