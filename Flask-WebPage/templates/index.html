@@ -22,136 +22,88 @@
     <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
         <a class="navbar-brand" href="#">Web Page Analysis</a>
     </nav>
-
-    <form class="offset-md-2 mt-5" method = "POST" action="/upload/File" enctype = "multipart/form-data">
-      <div class="form-row">
-        <div class="form-group col-md-8">
-          <input type="url" class="form-control" id="inputUrl" placeholder="Enter the URL" aria-describedby="url">
-          <small id="emailHelp" class="form-text text-muted">what web page do you want to analysis?</small>
-        </div>
-        <div class="form-group col-md-4">
-          <button type="submit" class="btn btn-primary">Enter</button>
-          <button type="submit" class="btn btn-primary">File</button>
-        </div>
-        <!-- <div class="custom-file form-group">
-          <input type="file" class="custom-file-input" id="customFile">
-          <label class="custom-file-label" for="customFile">Choose file</label>
-        </div> -->
-      </div>
-    </form>
-    <form class="offset-md-2 mt-5" method = "POST" action="/upload/File" enctype = "multipart/form-data">
-      <div class="form-row">
-        <div class="form-group col-md-8">
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <button id = "menu" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">선택</button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="#" onclick='changeFormSingleURL(); return false'>Single URL</a>
-                <div role="separator" class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" onClick='changeFormFile(); return false'>File</a>
+    <div class ="container-fluid">
+      <form class="offset-md-2 mt-5" method = "POST" action="/upload/File" enctype = "multipart/form-data">
+        <div class="form-row">
+          <div class="form-group col-md-8">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <button id = "menu" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Single URL</button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#" onclick='changeFormSingleURL(); return false' selected="selected">Single URL</a>
+                  <div role="separator" class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#" onClick='changeFormFile(); return false'>File</a>
+                </div>
+              </div>
+              <input id = "inputArea" type="text" class="form-control" placeholder="Single URL을 입력해주세요.">
+              <div id="fileGroup" class="custom-file" hidden>
+                <input type="file" class="custom-file-input" id="customFile">
+                <label class="custom-file-label" for="customFile">파일을 선택하거나 끌어당겨 넣어주세요.</label>
               </div>
             </div>
-            <input id = "inputArea" type="text" class="form-control" placeholder="메뉴를 선택해주세요.">
-            <div id="fileGroup" class="custom-file" hidden>
-              <input type="file" class="custom-file-input" id="customFile">
-              <label class="custom-file-label" for="customFile">파일을 선택하거나 끌어당겨 넣어주세요.</label>
-            </div>
+          </div>
+          <div class="form-group col-md-4">
+            <button type="submit" class="btn btn-primary">Enter</button>
           </div>
         </div>
-         <div class="form-group col-md-4">
-          <button type="submit" class="btn btn-primary">Enter</button>
-        </div>
-      </div>
-    </form>
-   
-    <svg width="1400" height="100">
+      </form>
+    </div>
+    <!-- <svg width="1400" height="100">
       <line x1="150" y1="50" x2="1300" y2="50" stroke="black" stroke-width="5" stroke-dasharray="10"/>
       <path stroke-dasharray="10,10" d="M5 40 l215 0" />
       Your Browser dosen't support svg attribute.
-    </svg>
+    </svg> -->
 
-    <div class="mx-5">
-      <h2 class = "mb-3">Open Source Project Analysis List</h2>
-      <table width = "100%" class="table table-bordered table-hover">
+    <div class="container-lg">
+      <h2 class = "mb-3">오픈소스 프로젝트 분석 리스트</h2>
+      <table width = "100%" class="table table-bordered table-hover talbe-striped">
         <caption>Analysis List</caption>
-        <thead>
+        <thead class="thead-light">
           <tr>
-            <th scope="col">Rank</th>
-            <th scope="col">Name</th>
-            <th scope="col">URL</th>
-            <th scope="col">Key-word list</th>
-            <th scope="col">Time</th>
+            <th style="width: 10%" scope="col" class = "text-center align-middle">번호</th>
+            <th style="width: 40%" scope="col" class = "text-center align-middle">URL</th>
+            <th style="width: 15%" scope="col" class = "text-center align-middle">전체 단어 수</th>
+            <th style="width: 10%" scope="col" class = "text-center align-middle">처리시간</th>
+            <th style="width: 20%" scope="col" class = "text-center align-middle">처리</th>
+            
           </tr>
         </thead>
         <tbody>
-          <tr class="table-primary"> 
-            <th scope="row">1</th>
-            <td>shiro</td>
-            <td>https://computer.knu.ac.kr</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script> let today = new Date(); document.write(today.toLocaleString());</script></td>
+          <tr> 
+            <th scope="row" class = "text-center align-middle">1</th>
+            <td class = "text-center align-middle">https://computer.knu.ac.kr</td>
+            <td class = "text-center align-middle">100</td>
+            <td class = "text-center align-middle">0.5ms</td>
+            <td class = "text-center align-middle">
+              <button type="button" class="btn btn-outline-success">단어 분석</button>&nbsp;&nbsp;&nbsp;
+              <button type="button" class="btn btn-outline-primary">유사도</button>
+            </td>
           </tr> 
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
-          </tr>
-          <tr class="table-info">)
-            <th scope="row">3</th>
-            <td>arrow</td>
-            <td>https://abeek.knu.ac.kr</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
-          </tr>
-          <tr class="table-warning">
-            <th scope="row">4</th>
-            <td>VCL</td>
-            <td>http://swedu.knu.ac.kr/</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
-          </tr>
-          <tr class="table-primary">
-            <th scope="row">5</th>
-            <td>shiro</td>
-            <td>https://computer.knu.ac.kr</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
-          </tr>
-          <tr class="table-success">
-            <th scope="row">6</th>
-            <td>kafka</td>
-            <td>https://knu.ac.kr</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
-          </tr>
-          <tr class="table-info">
-            <th scope="row">7</th>
-            <td>arrow</td>
-            <td>https://abeek.knu.ac.kr</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
-          </tr>
-          <tr class="table-warning">
-            <th scope="row">8</th>
-            <td>VCL</td>
-            <td>https://swedu.knu.ac.kr</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
-          </tr>
-          <tr class="table-primary">
-            <th scope="row">9</th>
-            <td>shiro</td>
-            <td>https://computer.knu.ac.kr</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
-          </tr>
-          <tr class="table-success">
-            <th scope="row">10</th>
-            <td>kafka</td>
-            <td>https://knu.ac.kr</td>
-            <td>Security, Computer, Authorization</td>
-            <td><script>document.write(today.toLocaleString());</script></td>
+          <tr>
+            <th scope="row" class = "text-center align-middle">2</th>
+            <td class = "text-center align-middle">https://computer.knu.ac.kr</td>
+            <td class = "text-center align-middle">200</td>
+            <td class = "text-center align-middle">0.8ms</td>
+            <td class = "text-center align-middle">
+              <button type="button" class="btn btn-outline-success">단어 분석</button>&nbsp;&nbsp;&nbsp;
+              <button type="button" class="btn btn-outline-primary">유사도</button>
+            </td>
           </tr>
         </tbody>
       </table>
+      <div class = "text-center">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">이전</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">다음</a>
+          </li>
+        </ul>
+      </div>
     </div>
  
   <script> 
