@@ -6,12 +6,13 @@ import numpy as np
 
 class Url_Similarity():
     
-    def __init__(self, url):
+    def __init__(self, url, es_host, es_port):
         self.url=url
         self.id=0
         self.word_list=[]
         self.word_d={}
         self.other_d={}
+        self.es=Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
     
     def SetUrl(self, url):
         self.url=url
@@ -19,7 +20,7 @@ class Url_Similarity():
     def Process_Own_Sentence(self):
         query ={"query":{"bool":{"must":{"match":{"url": self.url}}}},
             "_source":["url", "words", "frequencies"]}
-        result=es.search(index="urls", body=query, size=1)
+        result=self.es.search(index="urls", body=query, size=1)
         for res in result['hits']['hits']:
             self.id=res['_id']
             self.word_list=res['_source']['words']
@@ -33,7 +34,7 @@ class Url_Similarity():
         self.Process_Own_Sentence()
         query={ "query":{"bool":{"must":[{"match_all":{}}],
             "must_not":[{"match": {"id": str(self.id)}}]}}}
-        result=es.search(index="urls", body=query)
+        result=self.es.search(index="urls", body=query)
 
         for res in result["hits"]["hits"]:
             other_url=res['_source']['url']
@@ -81,11 +82,10 @@ if __name__ =="__main__":
 
         es_host="127.0.0.1"
         es_port="9200"
-        es=Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
-        
+
         url = "http://cassandra.apache.org/"
         
-        URL = Url_Similarity(url)
+        URL = Url_Similarity(url, es_host, es_port)
 
         for tup in URL.GetTop3():
              print("url: %-30s\tCosineSimilarity: %.10f" %(tup[0], tup[1]))
