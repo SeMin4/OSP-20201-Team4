@@ -6,18 +6,19 @@ import math
 
 class TF_IDF():
     
-    def __init__(self, url):
+    def __init__(self, url, es_host, es_port):
         self.url=url
         self.id=0
         self.word_d={}
         self.word_list=[]
         self.top10=[]
+        self.es=Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
 
 
     def OwnProcess(self):
         query ={"query":{"bool":{"must":{"match":{"url": self.url}}}},
             "_source":["url", "words", "frequencies"]}
-        result=es.search(index="urls", body=query, size=1)
+        result=self.es.search(index="urls", body=query, size=1)
         for res in result['hits']['hits']:
             self.id=res['_id']
             self.word_list.append(res['_source']['words'])
@@ -32,7 +33,7 @@ class TF_IDF():
 
         query={ "query":{"bool":{"must":[{"match_all":{}}],
             "must_not":[{"match": {"id": str(self.id)}}]}}}
-        result=es.search(index="urls", body=query)
+        result=self.es.search(index="urls", body=query)
 
         for res in result["hits"]["hits"]:
             self.Other_process_doc(res['_source']['words'], res['_source']['frequencies'])
@@ -114,11 +115,10 @@ if __name__ == "__main__":
 
     es_host="127.0.0.1"
     es_port="9200"
-    es=Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
 
     url = "http://cassandra.apache.org/" # 찾고자 하는 url
    
-    instance = TF_IDF(url=url)
+    instance = TF_IDF(url, es_host, es_port)
     top10=instance.GetTop10()
 
     for tup in top10:
