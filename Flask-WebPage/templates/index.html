@@ -7,8 +7,9 @@
     <title>OSP-Final-Project</title>
      
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
@@ -61,34 +62,65 @@
         <thead class="thead-light">
           <tr>
             <th style="width: 10%" scope="col" class = "text-center align-middle">번호</th>
-            <th style="width: 40%" scope="col" class = "text-center align-middle">URL</th>
-            <th style="width: 15%" scope="col" class = "text-center align-middle">전체 단어 수</th>
+            <th style="width: 35%" scope="col" class = "text-center align-middle">URL</th>
+            <th style="width: 10%" scope="col" class = "text-center align-middle">전체 단어수</th>
             <th style="width: 10%" scope="col" class = "text-center align-middle">처리시간</th>
-            <th style="width: 20%" scope="col" class = "text-center align-middle">처리</th>
+            <th style="width: 35%" scope="col" class = "text-center align-middle">처리</th>
             
           </tr>
         </thead>
         <tbody>
-          <tr> 
-            <th scope="row" class = "text-center align-middle">1</th>
-            <td class = "text-center align-middle">https://computer.knu.ac.kr</td>
-            <td class = "text-center align-middle">100</td>
-            <td class = "text-center align-middle">0.5ms</td>
-            <td class = "text-center align-middle">
-              <button type="button" class="btn btn-outline-success">단어 분석</button>&nbsp;&nbsp;&nbsp;
-              <button type="button" class="btn btn-outline-primary">유사도</button>
-            </td>
-          </tr> 
-          <tr>
-            <th scope="row" class = "text-center align-middle">2</th>
-            <td class = "text-center align-middle">https://computer.knu.ac.kr</td>
-            <td class = "text-center align-middle">200</td>
-            <td class = "text-center align-middle">0.8ms</td>
-            <td class = "text-center align-middle">
-              <button type="button" class="btn btn-outline-success">단어 분석</button>&nbsp;&nbsp;&nbsp;
-              <button type="button" class="btn btn-outline-primary">유사도</button>
-            </td>
-          </tr>
+          {% for i in range(0, len) %} 
+            <tr> 
+              <th scope="row" class = "text-center align-middle">{{i + 1}}</th>
+              <td class = "text-center align-middle">{{results[i]["url"]}}</td>
+              <td class = "text-center align-middle">{{results[i]["wordcnt"]}}</td>
+              <td class = "text-center align-middle">{{results[i]["processing_time"]}}ms</td>
+              <td class = "text-center align-middle">
+                <!-- Modal -->
+                <div class="modal fade" id="tfidfModal" tabindex="-1" role="dialog" aria-labelledby="tfidfModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">단어 분석</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        ...
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-outline-success analysisBtn" data-toggle="modal" data-target="#tfidfModal" name={{results[i]["url"]}}>단어 분석</button>&nbsp;&nbsp;&nbsp;
+                <!-- Modal -->
+                <div class="modal fade" id="similarityModal" tabindex="-1" role="dialog" aria-labelledby="similarityModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">코사인 유사도 분석</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        ...
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-outline-primary similarityBtn" data-toggle="modal" data-target="#similarityModal" name={{results[i]["url"]}}>유사도</button>&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-outline-info">워드 클라우드</button>
+              </td>
+            </tr> 
+          {% endfor %} 
         </tbody>
       </table>
       <div class = "text-center">
@@ -105,7 +137,51 @@
         </ul>
       </div>
     </div>
- 
+  <script>
+    var elements = $('.analysisBtn')
+    for(var i = 0; i < elements.length; i++){
+      elements[i].addEventListener("click", function(){
+        getTfidfInfo(this.name)
+      });
+    }
+    elements = $('.similarityBtn')
+    for(var i = 0; i < elements.length; i++){
+      elements[i].addEventListener("click", function(){
+        cosineSimilarityInfo(this.name)
+      });
+    }
+  </script>
+  <script>
+    function getTfidfInfo(url){
+      $.ajax({
+            type : 'GET',
+            url : "/analysis/tfidf?url="+url,
+            dataType : "json",
+            error : function(){
+               // alert("통신실패!!!!");
+            },
+            success : function(data){
+                console.log(data)
+                //alert("통신 성공")
+            }
+        });
+    }
+
+    function cosineSimilarityInfo(url){
+      $.ajax({
+            type : 'GET',
+            url : "/analysis/cosineSimilarity?url="+url,
+            dataType : "json",
+            error : function(){
+               //alert("통신실패!!!!");
+            },
+            success : function(data){
+                console.log(data)
+               // alert("통신 성공")
+            }
+        });
+    }
+  </script>
   <script> 
     function changeFormSingleURL(){
       var menu = document.getElementById("menu")
@@ -128,8 +204,6 @@
         fileGroup.hidden = false;
       }
     }
-  
   </script>
-
 </body>
 </html>

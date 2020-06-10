@@ -76,6 +76,7 @@ def add_word(wlist):
 		
 def word_processsing(url_list):
 	idvalue = 1	
+	result = []
 	for url in url_list:
 		start = process_timer()		
 		#urladdress = 'u'+'\''+url.strip()+'\''		
@@ -115,6 +116,8 @@ def word_processsing(url_list):
 		
 
 		dic = dict(url=urladdress, words = words, frequencies = frequencies, wordcnt = 		len(words),processing_time = ptime)
+		dic2 = dict(url=urladdress, wordcnt = len(words),processing_time = round(ptime,5))
+		result.append(dic2)
 		e = json.dumps(dic)
 		es = Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
 		res = es.index(index='urls', doc_type='url',id=idvalue, body=e)
@@ -124,11 +127,14 @@ def word_processsing(url_list):
 		frequencies.clear()
 		word_d.clear()
 		idvalue = idvalue + 1
+	return result
+	
 		
 #if __name__ == '__main__':
 def main(url_list):
 
-	word_processsing(url_list)
+	result = word_processsing(url_list)
+	return result
 
 		
 	

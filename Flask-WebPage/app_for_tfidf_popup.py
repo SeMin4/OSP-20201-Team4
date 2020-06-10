@@ -2,7 +2,9 @@ from flask import Flask
 from flask import render_template
 from flask import redirect, url_for, abort
 from flask import request
+
 from tfidf import TF_IDF
+
 from elasticsearch import Elasticsearch
 app = Flask(__name__)
 es_host="127.0.0.1"
