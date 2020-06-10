@@ -3,6 +3,8 @@ from flask import render_template
 from flask import redirect, url_for, abort
 from flask import request
 from flask_dropzone import Dropzone
+from werkzeug.utils import secure_filename
+import crawling
 
 
 
@@ -13,10 +15,23 @@ app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'text'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+	return render_template('index.html')
 
-@app.route('/upload/file', methods=['GET', 'POST'])
+@app.route('/upload/File', methods=['GET', 'POST'])
 def getFibonacci():
-    error = None
-    if request.method == 'POST':
-        return
+	error = None
+	if request.method == 'POST':
+		url_list = []		
+		f = request.files['file']
+		f.save(secure_filename(f.filename))
+		f1 = open(f.filename,'r')
+		url_list = f1.readlines()
+		f1.close()
+		
+		"""
+		url = request.form['url']	
+		url_list.append(url)		
+		"""
+
+		crawling.main(url_list)
+		return
