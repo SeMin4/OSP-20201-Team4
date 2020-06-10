@@ -115,9 +115,9 @@ if __name__ == "__main__":
 
     es_host="127.0.0.1"
     es_port="9200"
-
+    
     url = "http://cassandra.apache.org/" # 찾고자 하는 url
-   
+
     instance = TF_IDF(url, es_host, es_port)
     top10=instance.GetTop10()
 
