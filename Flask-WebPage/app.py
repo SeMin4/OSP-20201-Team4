@@ -22,16 +22,21 @@ def getFibonacci():
 	error = None
 	if request.method == 'POST':
 		url_list = []		
+
 		f = request.files['file']
-		f.save(secure_filename(f.filename))
-		f1 = open(f.filename,'r')
-		url_list = f1.readlines()
-		f1.close()
+		if f.filename != "":
+			print("file OKOKOKO")
+			#f.save(secure_filename(f.filename))
+			f1 = open(f.filename,'r')
+			url_list = f1.readlines()
+			f1.close()
 		
-		"""
-		url = request.form['url']	
-		url_list.append(url)		
-		"""
+		else:
+			print("file nononono")
+			url = request.form['url']
+			print("URL : " , url)	
+			url_list.append(url)		
+		
 
 		crawling.main(url_list)
 		return
