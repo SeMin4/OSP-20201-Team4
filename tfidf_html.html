@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>OSP-Final-Project</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+        <a class="navbar-brand" href="#">TF-IDF 기반 상위 10 단어 </a>
+    </nav>
+
+    <div class="mx-2">
+      <h2 class = "mb-2"></h2>
+      <table width = "100%" class="table table-bordered table-hover">
+        <caption> Top 10 List</caption>
+        <thead>
+          <tr>
+            <th scope="col" style="width: 50px; text-align: center;"> Top Rank</th>
+            <th scope="col" style="width: 200px; text-align: center;">Word</th>
+            <th scope="col" style="text-align: center;">Word Cloud</thscope></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-primary"> 
+            <th scope="row"  style="text-align: center;" >1</th>
+            <td scope="row" style="text-align: center;">{{result[0]}}</td>
+            <td rowspan="10" style="background-color: #e3f2fd;"> wordcloud 용 row 병합 </td>
+          </tr>
+          <tr class="table-success">
+            <th scope="row" style="text-align: center;">2</th>
+            <td scope="row" style="text-align: center;">{{result[1]}}</td>
+          </tr>
+          <tr class="table-info">
+            <th scope="row" style="text-align: center;">3</th>
+            <td scope="row" style="text-align: center;">{{result[2]}}</td>
+          </tr>
+          <tr class="table-warning">
+            <th scope="row" style="text-align: center;">4</th>
+            <td scope="row" style="text-align: center;">{{result[3]}}</td>
+          </tr>
+          <tr class="table-primary">
+            <th scope="row" style="text-align: center;">5</th>
+            <td scope="row" style="text-align: center;">{{result[4]}}</td>
+          </tr>
+          <tr class="table-success">
+            <th scope="row" style="text-align: center;">6</th>
+            <td scope="row" style="text-align: center;">{{result[5]}}</td>
+          </tr>
+          <tr class="table-info">
+            <th scope="row" style="text-align: center;">7</th>
+            <td scope="row" style="text-align: center;">{{result[6]}}</td>
+          </tr>
+          <tr class="table-warning">
+            <th scope="row" style="text-align: center;">8</th>
+            <td scope="row" style="text-align: center;">{{result[7]}}</td>
+          </tr>
+          <tr class="table-primary">
+            <th scope="row" style="text-align: center;">9</th>
+            <td scope="row" style="text-align: center;">{{result[8]}}</td>
+          </tr>
+          <tr class="table-success">
+            <th scope="row" style="text-align: center;">10</th>
+            <td scope="row" style="text-align: center;">{{result[9]}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</body>
+</html>
