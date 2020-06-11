@@ -18,13 +18,31 @@
         bsCustomFileInput.init()
       })
     </script>
+    <style type="text/css">
+      .btn-circle.btn-sm { 
+            width: 30px; 
+            height: 30px; 
+            padding: 6px 0px; 
+            border-radius: 15px; 
+            font-size: 8px; 
+            text-align: center; 
+        }
+        .btn-circle.btn-md { 
+            width: 50px; 
+            height: 50px; 
+            padding: 7px 10px; 
+            border-radius: 25px; 
+            font-size: 10px; 
+            text-align: center; 
+        }  
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
         <a class="navbar-brand" href="#">Web Page Analysis</a>
     </nav>
     <div class ="container-fluid">
-      <form class="offset-md-2 mt-5" method = "POST" action="/upload/File" enctype = "multipart/form-data">
+      <form class="offset-md-2 mt-5" method = "POST" enctype = "multipart/form-data" id="urlForm">
         <div class="form-row">
           <div class="form-group col-md-8">
             <div class="input-group mb-3">
@@ -44,83 +62,78 @@
             </div>
           </div>
           <div class="form-group col-md-4">
-            <button type="submit" class="btn btn-primary">Enter</button>
+            <button type="submit" class="btn btn-primary" id= "submitBtn">Enter</button>
           </div>
         </div>
       </form>
     </div>
-    <!-- <svg width="1400" height="100">
-      <line x1="150" y1="50" x2="1300" y2="50" stroke="black" stroke-width="5" stroke-dasharray="10"/>
-      <path stroke-dasharray="10,10" d="M5 40 l215 0" />
-      Your Browser dosen't support svg attribute.
-    </svg> -->
-
+    <div id = "crawlingContainer" class = "container-lg" hidden >
+      <h2 class = "mb-3">크롤링 상태표</h2>
+      <table width = "100%" class="table table-bordered table-hover talbe-striped">
+        <caption>Crawling Status</caption>
+        <thead class="thead-light">
+          <tr>
+            <th style="width: 10%" scope="col" class = "text-center align-middle">번호</th>
+            <th style="width: 35%" scope="col" class = "text-center align-middle">URL</th>
+            <th style="width: 10%" scope="col" class = "text-center align-middle">상태</th>
+          </tr>
+        </thead>
+        <tbody id = "crawlingList">
+        </tbody>
+      </table>
+    </div>
     <div class="container-lg">
       <h2 class = "mb-3">오픈소스 프로젝트 분석 리스트</h2>
       <table width = "100%" class="table table-bordered table-hover talbe-striped">
         <caption>Analysis List</caption>
         <thead class="thead-light">
+          <!-- Modal -->
+          <div class='modal fade' id='tfidfModal' tabindex='-1' role='dialog' aria-labelledby='tfidfModalLabel' aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable'>
+              <div class='modal-content'>
+                <div class='modal-header'>
+                  <h5 class='modal-title' id='exampleModalLabel'>단어 분석</h5>
+                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                    <span aria-hidden='true'>&times;</span>
+                  </button>
+                </div>
+                <div class='modal-body'>
+                  ...
+                </div>
+                <div class='modal-footer'>
+                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>닫기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Modal -->
+          <div class='modal fade' id='similarityModal' tabindex='-1' role='dialog' aria-labelledby='similarityModalLabel' aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable'>
+              <div class='modal-content'>
+                <div class='modal-header'>
+                  <h5 class='modal-title' id='exampleModalLabel'>코사인 유사도 분석</h5>
+                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                    <span aria-hidden='true'>&times;</span>
+                  </button>
+                </div>
+                <div class='modal-body'>
+                  ...
+                </div>
+                <div class='modal-footer'>
+                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>닫기</button>
+                </div>
+              </div>
+            </div>
+          </div>
           <tr>
             <th style="width: 10%" scope="col" class = "text-center align-middle">번호</th>
             <th style="width: 35%" scope="col" class = "text-center align-middle">URL</th>
             <th style="width: 10%" scope="col" class = "text-center align-middle">전체 단어수</th>
             <th style="width: 10%" scope="col" class = "text-center align-middle">처리시간</th>
             <th style="width: 35%" scope="col" class = "text-center align-middle">처리</th>
-            
           </tr>
         </thead>
-        <tbody>
-          {% for i in range(0, len) %} 
-            <tr> 
-              <th scope="row" class = "text-center align-middle">{{i + 1}}</th>
-              <td class = "text-center align-middle">{{results[i]["url"]}}</td>
-              <td class = "text-center align-middle">{{results[i]["wordcnt"]}}</td>
-              <td class = "text-center align-middle">{{results[i]["processing_time"]}}ms</td>
-              <td class = "text-center align-middle">
-                <!-- Modal -->
-                <div class="modal fade" id="tfidfModal" tabindex="-1" role="dialog" aria-labelledby="tfidfModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">단어 분석</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        ...
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button type="button" class="btn btn-outline-success analysisBtn" data-toggle="modal" data-target="#tfidfModal" name={{results[i]["url"]}}>단어 분석</button>&nbsp;&nbsp;&nbsp;
-                <!-- Modal -->
-                <div class="modal fade" id="similarityModal" tabindex="-1" role="dialog" aria-labelledby="similarityModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">코사인 유사도 분석</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        ...
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <button type="button" class="btn btn-outline-primary similarityBtn" data-toggle="modal" data-target="#similarityModal" name={{results[i]["url"]}}>유사도</button>&nbsp;&nbsp;&nbsp;
-                <button type="button" class="btn btn-outline-info">워드 클라우드</button>
-              </td>
-            </tr> 
-          {% endfor %} 
+        <tbody id = "crawling-body">
         </tbody>
       </table>
       <div class = "text-center">
@@ -137,21 +150,111 @@
         </ul>
       </div>
     </div>
+  
   <script>
-    var elements = $('.analysisBtn')
-    for(var i = 0; i < elements.length; i++){
-      elements[i].addEventListener("click", function(){
-        getTfidfInfo(this.name)
-      });
+    $("#submitBtn").click(function (event) {
+      var crawlingContainer = document.getElementById("crawlingContainer")
+      crawlingContainer.hidden = false;//감춰놧던걸 다시 보이기
+      var crawlingList = document.getElementById("crawlingList")
+      var crawlingBody = document.getElementById("crawling-body")
+      crawlingList.innerHTML = ""//이미 있던 결과 날리기
+      crawlingBody.innerHTML = ""//이미 있던 결과 날리기
+      event.preventDefault();//submit 없애 버리고
+      // DELETE
+      $.ajax({//전부다 지우기 엘라스틱 안에 있는거
+        url : "http://localhost:9200/*",
+        type : 'DELETE',
+        async : false,
+        success : function(){
+          console.log("success")
+        },
+        error : function(e){
+          console.log(e)
+        },
+      })
+      var form = $('#urlForm')[0];
+      // Create an FormData object 
+      var data = new FormData(form);
+      var file = data.getAll("file");
+      if(file[0].name != ""){
+        var reader = new FileReader()
+        var results;
+        reader.addEventListener("loadend", function() {
+          results = reader.result;//파일 내용 읽기 끝!
+          var result = results.split("\n")
+          console.log(result)
+          for(var i = 0; i < result.length; ++i){
+            crawlingList.innerHTML += "<tr><th scope='row' class = 'text-center align-middle'>"+(i+1)+"</th><td class = 'text-center align-middle'>"+result[i]+"</td><td id = 'crawlingResult"+(i + 1)+"'"+" class = 'text-center align-middle'><div class='spinner-grow' style='width: 3rem; height: 3rem;' role='status'><span class='sr-only'>Loading...</span></div></td></tr> ";
+            var bodyRow = "<tr> \
+                <th scope='row' class = 'text-center align-middle'>"+(i+1)+"</th>\
+                <td class = 'text-center align-middle'>"+result[i]+"</td>\
+                <td class = 'text-center align-middle'></td>\
+                <td class = 'text-center align-middle'></td>\
+                <td class = 'text-center align-middle'>\
+                  <button type='button' class='btn btn-outline-success analysisBtn' data-toggle='modal' data-target='#tfidfModal' name="+result[i]+">단어 분석</button>&nbsp;&nbsp;&nbsp;\
+                  <button type='button' class='btn btn-outline-primary similarityBtn' data-toggle='modal' data-target='#similarityModal' name="+result[i]+"}>유사도</button>&nbsp;&nbsp;&nbsp;\
+                  <button type='button' class='btn btn-outline-info'>워드 클라우드</button>\
+                </td>\
+              </tr> "
+            crawlingBody.innerHTML += bodyRow;
+            getCrawlingInfo(result[i],i + 1)
+          }
+          var elements = $('.analysisBtn')//이벤트 리스너 달기
+          for(var i = 0; i < elements.length; i++){
+            elements[i].addEventListener("click", function(){
+              getTfidfInfo(this.name)
+            });
+          }
+          elements = $('.similarityBtn')
+          for(var i = 0; i < elements.length; i++){
+            elements[i].addEventListener("click", function(){
+              cosineSimilarityInfo(this.name)
+            });
+          }
+        });
+        reader.readAsText(file[0])
+      }
+      else{
+        var singlueURL = data.getAll("url");
+        crawlingList.innerHTML += "<tr><th scope='row' class = 'text-center align-middle'>"+1+"</th><td class = 'text-center align-middle'>"+singlueURL+"</td><td id = 'crawlingResult"+1+"'"+" class = 'text-center align-middle'><div class='spinner-grow' style='width: 3rem; height: 3rem;' role='status'><span class='sr-only'>Loading...</span></div></td></tr> ";
+        var bodyRow = "<tr> \
+            <th scope='row' class = 'text-center align-middle'>"+1+"</th>\
+            <td class = 'text-center align-middle'>"+singlueURL+"</td>\
+            <td class = 'text-center align-middle'></td>\
+            <td class = 'text-center align-middle'></td>\
+            <td class = 'text-center align-middle'>\
+              <span class='d-inline-block' tabindex='0' data-toggle='tooltip' title='1개의 결과로 TF-IDF를 분석할 수 없습니다'>\
+                <button type='button' class='btn btn-success' style='pointer-events: none;' disabled>단어 분석</button>&nbsp;&nbsp;&nbsp;\
+              </span>\
+              <span class='d-inline-block' tabindex='0' data-toggle='tooltip' title='1개의 결과로 Cosine-Similarity 를 분석할 수 없습니다'>\
+                <button type='button' class='btn btn-primary' style='pointer-events: none;' disabled}>유사도</button>&nbsp;&nbsp;&nbsp;\
+              </span>\
+              <button type='button' class='btn btn-outline-info'>워드 클라우드</button>\
+            </td>\
+          </tr> "
+        crawlingBody.innerHTML += bodyRow;
+        getCrawlingInfo(singlueURL,1)
+      }
+    });
+    function getCrawlingInfo(url, id){
+      $.ajax({
+            type : 'GET',
+            url : "/upload/File?url="+url+"&&id="+id,
+            dataType : "json",
+            error : function(){
+              var resultRow = document.getElementById("crawlingResult"+id)
+              resultRow.innerHTML = ""
+              resultRow.innerHTML = "<button type='button' class='btn btn-danger btn-circle btn-md' disabled>실패</button>"
+            },
+            success : function(data){
+              var resultRow = document.getElementById("crawlingResult"+id)
+              resultRow.innerHTML = ""
+              resultRow.innerHTML = "<button type='button' class='btn btn-success btn-circle btn-md' disabled>성공</button>"
+              
+              console.log(data)
+            }
+        });
     }
-    elements = $('.similarityBtn')
-    for(var i = 0; i < elements.length; i++){
-      elements[i].addEventListener("click", function(){
-        cosineSimilarityInfo(this.name)
-      });
-    }
-  </script>
-  <script>
     function getTfidfInfo(url){
       $.ajax({
             type : 'GET',
@@ -182,15 +285,22 @@
         });
     }
   </script>
+  <script>
+    
+    
+  </script>
   <script> 
     function changeFormSingleURL(){
       var menu = document.getElementById("menu")
       var inputArea = document.getElementById("inputArea")
       var fileGroup = document.getElementById("fileGroup")
+      var form = document.getElementById("urlForm")
       menu.innerHTML="Single URL"
       if(inputArea.hidden){
+        form.reset();
         inputArea.hidden = false
         fileGroup.hidden = true
+        
       }
       inputArea.setAttribute('placeholder', "Single URL을 입력해 주세요.")
     }
@@ -198,12 +308,128 @@
       var menu = document.getElementById("menu")
       var inputArea = document.getElementById("inputArea")
       var fileGroup = document.getElementById("fileGroup")
+      var form = document.getElementById("urlForm")
       menu.innerHTML = "Files"
       if(fileGroup.hidden){
+        form.reset();
         inputArea.hidden = true;
         fileGroup.hidden = false;
       }
     }
   </script>
+
+  <!-- Styles -->
+  <style>
+  #chartdiv {
+    width: 100%;
+    height: 500px;
+  }
+
+  </style>
+
+  <!-- Resources -->
+  <script src="https://www.amcharts.com/lib/4/core.js"></script>
+  <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+  <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+  <!-- Chart code -->
+  <script>
+  am4core.ready(function() {
+
+  // Themes begin
+  am4core.useTheme(am4themes_animated);
+  // Themes end
+
+  var chart = am4core.create("chartdiv", am4charts.XYChart);
+  chart.padding(40, 40, 40, 40);
+
+  var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+  categoryAxis.renderer.grid.template.location = 0;
+  categoryAxis.dataFields.category = "network";
+  categoryAxis.renderer.minGridDistance = 1;
+  categoryAxis.renderer.inversed = true;
+  categoryAxis.renderer.grid.template.disabled = true;
+
+  var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+  valueAxis.min = 0;
+
+  var series = chart.series.push(new am4charts.ColumnSeries());
+  series.dataFields.categoryY = "network";
+  series.dataFields.valueX = "MAU";
+  series.tooltipText = "{valueX.value}"
+  series.columns.template.strokeOpacity = 0;
+  series.columns.template.column.cornerRadiusBottomRight = 5;
+  series.columns.template.column.cornerRadiusTopRight = 5;
+
+  var labelBullet = series.bullets.push(new am4charts.LabelBullet())
+  labelBullet.label.horizontalCenter = "left";
+  labelBullet.label.dx = 10;
+  labelBullet.label.text = "{values.valueX.workingValue.formatNumber('#.0as')}";
+  labelBullet.locationX = 1;
+
+  // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+  series.columns.template.adapter.add("fill", function(fill, target){
+    return chart.colors.getIndex(target.dataItem.index);
+  });
+
+  categoryAxis.sortBySeries = series;
+  chart.data = [
+      {
+        "network": "Facebook",
+        "MAU": 2255250000
+      },
+      {
+        "network": "Google+",
+        "MAU": 430000000
+      },
+      {
+        "network": "Instagram",
+        "MAU": 1000000000
+      },
+      {
+        "network": "Pinterest",
+        "MAU": 246500000
+      },
+      {
+        "network": "Reddit",
+        "MAU": 355000000
+      },
+      {
+        "network": "TikTok",
+        "MAU": 500000000
+      },
+      {
+        "network": "Tumblr",
+        "MAU": 624000000
+      },
+      {
+        "network": "Twitter",
+        "MAU": 329500000
+      },
+      {
+        "network": "WeChat",
+        "MAU": 1000000000
+      },
+      {
+        "network": "Weibo",
+        "MAU": 431000000
+      },
+      {
+        "network": "Whatsapp",
+        "MAU": 1433333333
+      },
+      {
+        "network": "YouTube",
+        "MAU": 1900000000
+      }
+    ]
+
+
+
+  }); // end am4core.ready()
+  </script>
+
+  <!-- HTML -->
+  <div id="chartdiv"></div>
 </body>
 </html>

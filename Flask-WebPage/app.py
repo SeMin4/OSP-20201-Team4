@@ -15,16 +15,27 @@ from cosinesimilarity import Url_Similarity
 
 app = Flask(__name__)
 
-app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'text'
-
 @app.route('/')
 def index():
-	return render_template('index.html', len= 0, results = "")
+	return render_template('index.html')
 
 @app.route('/upload/File', methods=['GET', 'POST'])
 def uploadFile():
 	error = None
-	if request.method == 'POST':
+	if request.method == 'GET':
+		url = request.args.get('url')
+		id = request.args.get('id')
+		url_list = []		
+		url_list.append(url)
+		"""
+		url = request.form['url']	
+		url_list.append(url)		
+		"""
+		result = crawling.main(url_list)
+		
+		return json.dumps(result)
+		
+	elif request.method == 'POST':
 		url_list = []		
 		f = request.files['file']
 		f.save(secure_filename(f.filename))
