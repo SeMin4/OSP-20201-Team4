@@ -13,6 +13,8 @@ class TF_IDF():
         self.word_list=[]
         self.top10=[]
         self.es=Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
+        self.sums=0
+        self.lst=[]
 
 
     def OwnProcess(self):
@@ -28,6 +30,7 @@ class TF_IDF():
             self.word_d[self.word_list[0][idx]]=val[idx]
     
     def All_Process(self):
+        
         top_dic={}
         self.OwnProcess()
 
@@ -44,16 +47,27 @@ class TF_IDF():
 
         for word,tfval in tf_d.items():
             top_dic[word]=tfval*idf_d[word]
+            self.sums=self.sums+top_dic[word]
+        
+        #print(self.sums)
 
+    
+        #디비 내 문서 전체 tf-idf 확인할 때 이거 쓰기
         '''
-        디비 내 문서 전체 tf-idf 확인할 때 이거 쓰기
         for i in range(0, len(self.word_list)):
             tf_d=self.compute_tf(self.word_list[i])
-        
+            self.sums=0
             for word,tfval in tf_d.items():
                 top_dic[word]=tfval*idf_d[word]
                 print(word, tfval*idf_d[word])
+                self.sums=self.sums+top_dic[word]
             print("-------------------------------------")
+            print(self.sums)
+            self.lst.append(self.sums)
+            print("-------------------------------------")
+        
+        for i in self.lst:
+            print(i, end=" ")
         '''
         
         return top_dic
