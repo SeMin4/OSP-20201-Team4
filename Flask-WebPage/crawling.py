@@ -15,11 +15,14 @@ import time
 
 es_host="127.0.0.1"
 es_port="9200"
-
+es = Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
 
 words = []
 frequencies = []
 word_d = {}
+
+input_urls = []
+input_urls_value = []
 
 
 def del_symbols(my_lines):
@@ -36,6 +39,16 @@ def del_symbols(my_lines):
 			lines_list[i] = lines_list[i].replace(mark,' ')
 	
 	return lines_list
+
+def efilter(s):
+	lines_list =[]
+	for i in s:
+		text = re.sub('[^a-zA-Z ]','',i).strip()
+		lines_list.append(text+' ')
+		
+
+	return lines_list
+
 
 def del_stopwords(lines_list):
 	
@@ -74,66 +87,69 @@ def add_word(wlist):
 
 
 		
-def word_processsing(url_list):
-	idvalue = 1	
+def word_processsing(url_list, id):
+	idvalue = int(id) 
 	result = []
 	for url in url_list:
 		start = process_timer()		
 		#urladdress = 'u'+'\''+url.strip()+'\''		
-		urladdress = url.strip()
-		ress = requests.get(urladdress)	#에러가 발생하지 않으면 f2에 url쓰기
+		urladdress = url.strip()		
 		
-		"""
-		if urladdress not in url_cur_list:			
-			if urladdress not in urllist:		
-				f2.write(url)
-				url_cur_list.append(urladdress)
-			else:
-				print("중복된 url")
-				continue
-				
-		else:
-			print("중복된 url")
+		if urladdress in input_urls:			
+			input_urls.append(urladdress)			
+			input_urls_value.append(3)			
+			print("중복된 url")	#중복
 			continue
-		"""
+		input_urls.append(urladdress)
 			
+		ress = requests.get(urladdress)	
+		rval = ress.status_code
+		if rval <200 | rval >= 300:
+			input_urls_value.append(2)
+			print("url 크롤링실패")	#실패
+			continue
 
+		
 		html = BeautifulSoup(ress.content, "html.parser")
 		#content = html.select('body')
 		content = html.findAll(text = True)
 		#print(content)
 		#print("-------------------------------------------")
 		list1 = del_symbols(content)
-		#print(list1)
+		list1 = efilter(list1)
 		list1 = del_stopwords(list1)
-			
+
+		
 		#print( "stopwords를 제거한 단어 list",list1)	
 		add_word(list1)	
 		end = process_timer()
 		ptime = end - start #처리시간 check
+		input_urls_value.append(1) 	#성공
+	
 		words = list(word_d.keys())			#dict.keys() -> words list
 		frequencies = list(word_d.values())		#dict.values() -> frequency list
-		
+		print(len(word_d))	
 
 		dic = dict(url=urladdress, words = words, frequencies = frequencies, wordcnt = 		len(words),processing_time = ptime)
-		dic2 = dict(url=urladdress, wordcnt = len(words),processing_time = round(ptime,5))
+		dic2 = dict(id= id, url=urladdress, wordcnt = len(words),processing_time = round(ptime,5))
 		# result.append(dic2)
 		e = json.dumps(dic)
-		es = Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
 		res = es.index(index='urls', doc_type='url',id=idvalue, body=e)
-		print(res)
+		#print(res)
+	
 		
 		words.clear()
 		frequencies.clear()
 		word_d.clear()
-		idvalue = idvalue + 1
+
 	return dic2
 	
 		
 #if __name__ == '__main__':
-def main(url_list):
-
-	result = word_processsing(url_list)
+def main(url_list ,id) :
+	input_urls.clear()
+	input_urls_value.clear()
+	result = word_processsing(url_list, id)
 	return result
 
 		

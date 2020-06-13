@@ -31,12 +31,13 @@ def uploadFile():
 		url = request.form['url']	
 		url_list.append(url)		
 		"""
-		result = crawling.main(url_list)
+		result = crawling.main(url_list,id)
 		
 		return json.dumps(result)
 		
 	elif request.method == 'POST':
 		url_list = []		
+
 		f = request.files['file']
 		f.save(secure_filename(f.filename))
 		f1 = open(f.filename,'r')
