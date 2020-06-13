@@ -13,7 +13,7 @@ import json
 
 from tfidf import TF_IDF
 from cosinesimilarity import Url_Similarity
-
+from dbtocsv import ToCsv
 
 
 app = Flask(__name__)
@@ -95,3 +95,37 @@ def cosineSimilariyAnaylsis() :
             "percent":sm_lst
         }
         return json.dumps(returnResult)
+
+
+
+@app.route('/make/wordcloud', methods=['GET'])
+def make_cloud_image():
+    error = None
+    es_host="127.0.0.1"
+    es_port="9200"
+    if request.method == 'GET' :
+        url = request.args.get('url')
+        wd=Word_Cloud(url,es_host, es_port).make_cloud_image()
+        fig=plt.figure(figsize=(10,10))
+        plt.imshow(wd)
+        plt.axis("off")
+        fname="img.png"
+        fig.savefig("static/image/"+fname)
+        plt.close(fig)
+        returnResult = {
+            "fname":fname
+        }
+        return json.dumps(returnResult)
+
+
+@app.route('/down/csv')
+def down_csv():
+    es_host="127.0.0.1"
+    es_port="9200"
+
+    inst=ToCsv(es_host, es_port, "./static/csv/db.csv")
+    df=inst.toCsv()
+    returnResult = {
+        "fname":"../static/csv/db.csv"
+    }
+    return json.dumps(returnResult)

@@ -62,7 +62,7 @@ if __name__=="__main__":
     es_host="127.0.0.1"
     es_port="9200"
 
-    inst=ToCsv(es_host, es_port, "db.csv")
+    inst=ToCsv(es_host, es_port, "./static/csv/db.csv")
     df=inst.toCsv()
     print(df)
 

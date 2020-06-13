@@ -30,7 +30,6 @@ class Word_Cloud():
         fig=plt.figure(figsize=(10,10))
         plt.imshow(word_cloud)
         plt.axis("off")
-    
         return word_cloud
     
 if __name__ =="__main__":
@@ -41,6 +40,7 @@ if __name__ =="__main__":
     wc=Word_Cloud(url, es_host, es_port)
     wd=wc.make_cloud_image()
     plt.show()
+    
 
     
 
