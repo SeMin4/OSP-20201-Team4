@@ -9,16 +9,20 @@ class TF_IDF():
     def __init__(self, url, es_host, es_port):
         self.url=url
         self.id=0
+        self.size=0
         self.word_d={}
         self.word_list=[]
         self.top10=[]
         self.es=Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
+        self.sums=0
+        self.lst=[]
 
 
     def OwnProcess(self):
         query ={"query":{"bool":{"must":{"match":{"url": self.url}}}},
             "_source":["url", "words", "frequencies"]}
         result=self.es.search(index="urls", body=query, size=1)
+        self.size=result['hits']['total']['value']
         for res in result['hits']['hits']:
             self.id=res['_id']
             self.word_list.append(res['_source']['words'])
@@ -28,14 +32,18 @@ class TF_IDF():
             self.word_d[self.word_list[0][idx]]=val[idx]
     
     def All_Process(self):
+        
         top_dic={}
         self.OwnProcess()
 
         query={ "query":{"bool":{"must":[{"match_all":{}}],
-            "must_not":[{"match": {"id": str(self.id)}}]}}}
+            "must_not":[{"match": {"id": str(self.id)}}]}}, "size": str(self.size)}
         result=self.es.search(index="urls", body=query)
 
         for res in result["hits"]["hits"]:
+            other_url=res['_source']['url']
+            if(other_url==self.url):
+                continue
             self.Other_process_doc(res['_source']['words'], res['_source']['frequencies'])
         
         idf_d=self.compute_idf()
@@ -44,16 +52,27 @@ class TF_IDF():
 
         for word,tfval in tf_d.items():
             top_dic[word]=tfval*idf_d[word]
+            self.sums=self.sums+top_dic[word]
+        
+        #print(self.sums)
 
+    
+        #디비 내 문서 전체 tf-idf 확인할 때 이거 쓰기
         '''
-        디비 내 문서 전체 tf-idf 확인할 때 이거 쓰기
         for i in range(0, len(self.word_list)):
             tf_d=self.compute_tf(self.word_list[i])
-        
+            self.sums=0
             for word,tfval in tf_d.items():
                 top_dic[word]=tfval*idf_d[word]
                 print(word, tfval*idf_d[word])
+                self.sums=self.sums+top_dic[word]
             print("-------------------------------------")
+            print(self.sums)
+            self.lst.append(self.sums)
+            print("-------------------------------------")
+        
+        for i in self.lst:
+            print(i, end=" ")
         '''
         
         return top_dic
