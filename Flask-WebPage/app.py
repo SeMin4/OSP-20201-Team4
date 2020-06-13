@@ -5,6 +5,9 @@ from flask import request
 from flask import Response
 from flask import jsonify
 from werkzeug.utils import secure_filename
+import matplotlib.pyplot as plt
+from MakeWordCloud import Word_Cloud
+
 import crawling
 import json
 
@@ -53,41 +56,42 @@ def uploadFile():
 
 @app.route('/analysis/tfidf', methods=['GET'])
 def tfidfAnalysis() :
-	error = None
-	es_host="127.0.0.1"
-	es_port="9200"
-	if request.method == 'GET':
-		url = request.args.get('url')
-		# print("url : " + url)
-		tf=TF_IDF(url, es_host, es_port)
-		lstWord=[]
-		lstPercent = []
-		top10=tf.GetTop10()
-		for word in top10:
-			lstWord.append(word[0])
-			lstPercent.append(word[1])
-
-		return jsonify(
-			word=json.dumps(lstWord),
-			percent=json.dumps(lstPercent)
-		)
+    error = None
+    es_host="127.0.0.1"
+    es_port="9200"
+    if request.method == 'GET' :
+        url = request.args.get('url')
+        # print("url : " + url)
+        tf=TF_IDF(url, es_host, es_port)
+        lstWord=[]
+        lstPercent = []
+        top10=tf.GetTop10()
+        for word in top10:
+            lstWord.append(word[0])
+            lstPercent.append(word[1])
+        returnResult = {
+            "word":lstWord,
+            "percent":lstPercent
+        }
+        return json.dumps(returnResult)
 
 
 @app.route('/analysis/cosineSimilarity', methods=['GET'])
 def cosineSimilariyAnaylsis() :
-	error = None
-	es_host="127.0.0.1"
-	es_port="9200"
-	if request.method == 'GET':
-		url = request.args.get('url')
-		cs=Url_Similarity(url, es_host, es_port)
-		url_lst=[]
-		sm_lst=[]
-		top3=cs.GetTop3()
-		for url in top3:
-			url_lst.append(url[0])
-			sm_lst.append(url[1])
-		return jsonify(
-			word=json.dumps(url_lst),
-			percent=json.dumps(sm_lst)
-		)
+    error = None
+    es_host="127.0.0.1"
+    es_port="9200"
+    if request.method == 'GET':
+        url = request.args.get('url')
+        cs=Url_Similarity(url, es_host, es_port)
+        url_lst=[]
+        sm_lst=[]
+        top3=cs.GetTop3()
+        for url in top3:
+            url_lst.append(url[0])
+            sm_lst.append(url[1])
+        returnResult = {
+            "url":url_lst,
+            "percent":sm_lst
+        }
+        return json.dumps(returnResult)

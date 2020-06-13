@@ -8,8 +8,6 @@
      
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
@@ -47,7 +45,10 @@
       width: 100%;
       height: 500px;
     }
-
+    #chartdiv2 {
+      width: 100%;
+      height: 500px;
+    }
     </style>
 
     <!-- Resources -->
@@ -57,26 +58,27 @@
 
     <!-- Chart code -->
     <script>
+    var tfIDFchart
     am4core.ready(function() {
 
       // Themes begin
       am4core.useTheme(am4themes_animated);
       // Themes end
 
-      var chart = am4core.create("chartdiv", am4charts.XYChart);
-      chart.padding(40, 40, 40, 40);
+      tfIDFchart = am4core.create("chartdiv", am4charts.XYChart);
+      tfIDFchart.padding(40, 40, 40, 40);
 
-      var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+      var categoryAxis = tfIDFchart.yAxes.push(new am4charts.CategoryAxis());
       categoryAxis.renderer.grid.template.location = 0;
       categoryAxis.dataFields.category = "network";
       categoryAxis.renderer.minGridDistance = 1;
       categoryAxis.renderer.inversed = true;
       categoryAxis.renderer.grid.template.disabled = true;
 
-      var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+      var valueAxis = tfIDFchart.xAxes.push(new am4charts.ValueAxis());
       valueAxis.min = 0;
 
-      var series = chart.series.push(new am4charts.ColumnSeries());
+      var series = tfIDFchart.series.push(new am4charts.ColumnSeries());
       series.dataFields.categoryY = "network";
       series.dataFields.valueX = "MAU";
       series.tooltipText = "{valueX.value}"
@@ -92,11 +94,11 @@
 
       // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
       series.columns.template.adapter.add("fill", function(fill, target){
-        return chart.colors.getIndex(target.dataItem.index);
+        return tfIDFchart.colors.getIndex(target.dataItem.index);
     });
 
     categoryAxis.sortBySeries = series;
-    chart.data = [
+    tfIDFchart.data = [
         {
           "network": "Facebook",
           "MAU": 2255250000
@@ -152,6 +154,50 @@
     }); // end am4core.ready()
     </script>
 
+    <script>
+    var similarityChart
+    am4core.ready(function() {
+
+      // Themes begin
+      am4core.useTheme(am4themes_animated);
+      // Themes end
+
+      similarityChart = am4core.create("chartdiv2", am4charts.XYChart);
+      similarityChart.padding(40, 40, 40, 40);
+
+      var categoryAxis = similarityChart.yAxes.push(new am4charts.CategoryAxis());
+      categoryAxis.renderer.grid.template.location = 0;
+      categoryAxis.dataFields.category = "url";
+      categoryAxis.renderer.minGridDistance = 1;
+      categoryAxis.renderer.inversed = true;
+      categoryAxis.renderer.grid.template.disabled = true;
+
+      var valueAxis = similarityChart.xAxes.push(new am4charts.ValueAxis());
+      valueAxis.min = 0;
+
+      var series = similarityChart.series.push(new am4charts.ColumnSeries());
+      series.dataFields.categoryY = "url";
+      series.dataFields.valueX = "similiarity";
+      series.tooltipText = "{valueX.value}"
+      series.columns.template.strokeOpacity = 0;
+      series.columns.template.column.cornerRadiusBottomRight = 5;
+      series.columns.template.column.cornerRadiusTopRight = 5;
+
+      var labelBullet = series.bullets.push(new am4charts.LabelBullet())
+      labelBullet.label.horizontalCenter = "left";
+      labelBullet.label.dx = 10;
+      labelBullet.label.text = "{values.valueX.workingValue.formatNumber('#.0as')}"+"%";
+      labelBullet.locationX = 1;
+
+      // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+      series.columns.template.adapter.add("fill", function(fill, target){
+        return similarityChart.colors.getIndex(target.dataItem.index);
+    });
+
+    categoryAxis.sortBySeries = series;
+    }); // end am4core.ready()
+    </script>
+    
     <!-- HTML -->
     
     <div class ="container-fluid">
@@ -182,7 +228,7 @@
     </div>
     <div id = "crawlingContainer" class = "container-lg" hidden >
       <h2 class = "mb-3">크롤링 상태표</h2>
-      <table width = "100%" class="table table-bordered table-hover talbe-striped">
+      <table width = "100%" class="table table-bordered table-hover table-striped">
         <caption>Crawling Status</caption>
         <thead class="thead-light">
           <tr>
@@ -195,49 +241,123 @@
         </tbody>
       </table>
     </div>
+    <!-- Modal -->
+    <div class='modal fade bs-example-modal-lg' id='tfidfModal' tabindex='-1' role='dialog' aria-labelledby='tfidfModalLabel' aria-hidden='true'>
+      <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <h5 class='modal-title' id='exampleModalLabel'>단어 분석</h5>
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button>
+          </div>
+          <div class='modal-body'>
+            <table width = "100%" class="table table-bordered table-hover table-striped">
+              <caption> Top 10 List</caption>
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 50px; text-align: center;"> Top Rank</th>
+                  <th scope="col" style="width: 200px; text-align: center;">Word</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >1</th>
+                  <td id = "topWord1" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >2</th>
+                  <td id = "topWord2" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >3</th>
+                  <td id = "topWord3" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >4</th>
+                  <td id = "topWord4" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >5</th>
+                  <td id = "topWord5" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >6</th>
+                  <td id = "topWord6" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >7</th>
+                  <td id = "topWord7" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >8</th>
+                  <td id = "topWord8" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >9</th>
+                  <td id = "topWord9" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >10</th>
+                  <td id = "topWord10" scope="row" style="text-align: center;"></td>
+                </tr>
+              </tbody>
+            </table>
+            <div id="chartdiv"></div>
+          </div>
+          <div class='modal-footer'>
+            <button type='button' class='btn btn-secondary' data-dismiss='modal'>닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class='modal fade bs-example-modal-lg' id='similarityModal' tabindex='-1' role='dialog' aria-labelledby='similarityModalLabel' aria-hidden='true'>
+      <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <h5 class='modal-title' id='exampleModalLabel'>단어 분석</h5>
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button>
+          </div>
+          <div class='modal-body'>
+            <table width = "100%" class="table table-bordered table-hover table-striped">
+              <caption> Top 3 List</caption>
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 50px; text-align: center;"> Top Rank</th>
+                  <th scope="col" style="width: 200px; text-align: center;">URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >1</th>
+                  <td id = "cosineURL1" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >2</th>
+                  <td id = "cosineURL2" scope="row" style="text-align: center;"></td>
+                </tr>
+                <tr> 
+                  <th scope="row"  style="text-align: center;" >3</th>
+                  <td id = "cosineURL3" scope="row" style="text-align: center;"></td>
+                </tr>
+              </tbody>
+            </table>
+            <div id="chartdiv2"></div>
+          </div>
+          <div class='modal-footer'>
+            <button type='button' class='btn btn-secondary' data-dismiss='modal'>닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container-lg">
       <h2 class = "mb-3">오픈소스 프로젝트 분석 리스트</h2>
-      <table width = "100%" class="table table-bordered table-hover talbe-striped">
+      <table width = "100%" class="table table-bordered table-hover table-striped">
         <caption>Analysis List</caption>
         <thead class="thead-light">
-          <!-- Modal -->
-          <div class='modal fade' id='tfidfModal' tabindex='-1' role='dialog' aria-labelledby='tfidfModalLabel' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl'>
-              <div class='modal-content'>
-                <div class='modal-header'>
-                  <h5 class='modal-title' id='exampleModalLabel'>단어 분석</h5>
-                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                    <span aria-hidden='true'>&times;</span>
-                  </button>
-                </div>
-                <div class='modal-body'>
-                  <div id="chartdiv"></div>
-                </div>
-                <div class='modal-footer'>
-                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>닫기</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Modal -->
-          <div class='modal fade' id='similarityModal' tabindex='-1' role='dialog' aria-labelledby='similarityModalLabel' aria-hidden='true'>
-            <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl'>
-              <div class='modal-content'>
-                <div class='modal-header'>
-                  <h5 class='modal-title' id='exampleModalLabel'>코사인 유사도 분석</h5>
-                  <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                    <span aria-hidden='true'>&times;</span>
-                  </button>
-                </div>
-                <div class='modal-body'>
-                  <div id="chartdiv"></div>
-                </div>
-                <div class='modal-footer'>
-                  <button type='button' class='btn btn-secondary' data-dismiss='modal'>닫기</button>
-                </div>
-              </div>
-            </div>
-          </div>
           <tr>
             <th style="width: 10%" scope="col" class = "text-center align-middle">번호</th>
             <th style="width: 35%" scope="col" class = "text-center align-middle">URL</th>
@@ -249,7 +369,7 @@
         <tbody id = "crawling-body">
         </tbody>
       </table>
-      <div class = "text-center">
+      <!--<div class = "text-center">
         <ul class="pagination justify-content-center">
           <li class="page-item disabled">
             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">이전</a>
@@ -261,7 +381,7 @@
             <a class="page-link" href="#">다음</a>
           </li>
         </ul>
-      </div>
+      </div>-->
     </div>
   
   <script>
@@ -396,7 +516,10 @@
             },
             success : function(data){
                 console.log(data)
-                //alert("통신 성공")
+                for(var i = 1; i <= 10; ++i){
+                    var topword = document.getElementById("topWord"+i);
+                    topword.innerHTML = data["word"][i - 1]
+                }
             }
         });
     }
@@ -410,8 +533,25 @@
                //alert("통신실패!!!!");
             },
             success : function(data){
+                similarityChart.data = [
+                  {
+                    "url": data["url"][0],
+                    "similiarity": data["percent"][0]*100
+                  },
+                  {
+                    "url": data["url"][1],
+                    "similiarity": data["percent"][1]*100
+                  },
+                  {
+                    "url": data["url"][2],
+                    "similiarity": data["percent"][2]*100
+                  }
+                ]
+                for(var i = 1; i < 3; ++i){
+                    var topURL = document.getElementById("cosineURL"+i)
+                    topURL.innerHTML = data["url"][i - 1]
+                }
                 console.log(data)
-               // alert("통신 성공")
             }
         });
     }
