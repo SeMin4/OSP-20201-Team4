@@ -16,8 +16,7 @@ def make_cloud_image():
     fig=plt.figure(figsize=(10,10))
     plt.imshow(wd)
     plt.axis("off")
-    
     fname="img.png"
-    fig.savefig("static/"+fname)
-    
+    fig.savefig("static/image/"+fname)
+    plt.close()
     return render_template("WordCloud.html", fname=fname)

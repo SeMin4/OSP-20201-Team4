@@ -27,9 +27,6 @@ class Word_Cloud():
 
         self.get_tag()
         word_cloud=word_cloud.generate_from_frequencies(self.word_d)
-        fig=plt.figure(figsize=(10,10))
-        plt.imshow(word_cloud)
-        plt.axis("off")
         return word_cloud
     
 if __name__ =="__main__":
@@ -39,7 +36,12 @@ if __name__ =="__main__":
 
     wc=Word_Cloud(url, es_host, es_port)
     wd=wc.make_cloud_image()
-    plt.show()
+    fig=plt.figure(figsize=(10,10))
+    plt.imshow(wd)
+    plt.axis("off")
+    fname="img.png"
+    fig.savefig("static/image/"+fname)
+    plt.close()
     
 
     
