@@ -111,7 +111,7 @@ def make_cloud_image():
         fig=plt.figure(figsize=(10,10))
         plt.imshow(wd)
         plt.axis("off")
-        fname="img.png"
+        fname= url.split("//")[1].split(".")[0] + ".png"
         fig.savefig("static/image/"+fname)
         plt.close()
         returnResult = {
