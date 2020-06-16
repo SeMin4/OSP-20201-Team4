@@ -5,6 +5,8 @@ from flask import request
 from flask import Response
 from flask import jsonify
 from werkzeug.utils import secure_filename
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from MakeWordCloud import Word_Cloud
 
@@ -111,7 +113,7 @@ def make_cloud_image():
         plt.axis("off")
         fname="img.png"
         fig.savefig("static/image/"+fname)
-        plt.close(fig)
+        plt.close()
         returnResult = {
             "fname":fname
         }
