@@ -118,7 +118,7 @@ if __name__ == "__main__":
     input_url="http://archiva.apache.org/"
     a="http://directory.apache.org/"
 
-    instance = TF_IDF(input_url, es_host, es_port)
+    instance = TF_IDF(a, es_host, es_port)
     top10=instance.GetTop10()
 
     for tup in top10:
