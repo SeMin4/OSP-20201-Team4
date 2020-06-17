@@ -56,7 +56,7 @@ $("#csvDownBtn").click(function (event){
           check = true
           crawlingList.innerHTML += "<tr><th scope='row' class = 'text-center align-middle'>"+(i+1)+"</th><td class = 'text-center align-middle'>"+result[i]+"</td><td id = 'crawlingResult"+(i + 1)+"'"+" class = 'text-center align-middle'><div class='spinner-grow' style='width: 3rem; height: 3rem;' role='status'><span class='sr-only'>Loading...</span></div></td></tr> ";
           for(var j = 0; j < i; ++j){
-            if(result[i] == result[j]){
+            if(result[i] == result[j]){//url 중복 검사
               var resultRow = document.getElementById("crawlingResult"+(i+1))
               resultRow.innerHTML = ""
               resultRow.innerHTML = "<button type='button' class='btn btn-warning btn-circle btn-md' disabled>중복</button>"
@@ -106,22 +106,28 @@ $("#csvDownBtn").click(function (event){
       var singlueURL = data.getAll("url");
       crawlingList.innerHTML += "<tr><th scope='row' class = 'text-center align-middle'>"+1+"</th><td class = 'text-center align-middle'>"+singlueURL+"</td><td id = 'crawlingResult"+1+"'"+" class = 'text-center align-middle'><div class='spinner-grow' style='width: 3rem; height: 3rem;' role='status'><span class='sr-only'>Loading...</span></div></td></tr> ";
       var bodyRow = "<tr> \
-          <th scope='row' class = 'text-center align-middle'>"+1+"</th>\
-          <td class = 'text-center align-middle'>"+singlueURL+"</td>\
-          <td class = 'text-center align-middle'></td>\
-          <td class = 'text-center align-middle'></td>\
-          <td class = 'text-center align-middle'>\
+            <th scope='row' class = 'text-center align-middle'>"+1+"</th>\
+            <td class = 'text-center align-middle'>"+singlueURL+"</td>\
+            <td id = 'wordcnt"+1+"' class = 'text-center align-middle'></td>\
+            <td id = 'processtime"+1+"' class = 'text-center align-middle'></td>\
+            <td class = 'text-center align-middle'>\
             <span class='d-inline-block' tabindex='0' data-toggle='tooltip' title='1개의 결과로 TF-IDF를 분석할 수 없습니다'>\
               <button type='button' class='btn btn-success' style='pointer-events: none;' disabled>단어 분석</button>&nbsp;&nbsp;&nbsp;\
             </span>\
             <span class='d-inline-block' tabindex='0' data-toggle='tooltip' title='1개의 결과로 Cosine-Similarity 를 분석할 수 없습니다'>\
               <button type='button' class='btn btn-primary' style='pointer-events: none;' disabled}>유사도</button>&nbsp;&nbsp;&nbsp;\
             </span>\
-            <button type='button' class='btn btn-outline-info'>워드 클라우드</button>\
+            <button type='button' class='btn btn-outline-info wordCloudBtn' data-toggle='modal' data-target='#wordCloudModal' name="+singlueURL+">워드 클라우드</button>\
           </td>\
         </tr> "
       crawlingBody.innerHTML += bodyRow;
-      getCrawlingInfo(singlueURL,1)
+      getCrawlingInfo(singlueURL,1,1)
+      elements = $('.wordCloudBtn')
+      for(var i = 0; i < elements.length; i++){
+        elements[i].addEventListener("click", function(){
+          wordCloudInfo(this.name)
+        });
+      }
     }
 
   });
