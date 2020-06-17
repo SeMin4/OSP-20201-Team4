@@ -116,6 +116,7 @@ if __name__ == "__main__":
     
     url = "http://cassandra.apache.org/" # 찾고자 하는 url
     input_url="http://archiva.apache.org/"
+    a="http://directory.apache.org/"
 
     instance = TF_IDF(input_url, es_host, es_port)
     top10=instance.GetTop10()
