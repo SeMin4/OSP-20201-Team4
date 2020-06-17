@@ -61,6 +61,10 @@ def del_stopwords(lines_list):
 	swlist = []	#stopwords list
 	for sw in stopwords.words("english"):
 		swlist.append(sw)
+		w = sw.capitalize()
+		swlist.append(w)
+		w = sw.upper()
+		swlist.append(w)
 	
 	
 	tokenized = word_tokenize(string)
