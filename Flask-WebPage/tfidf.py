@@ -31,6 +31,7 @@ class TF_IDF():
         for idx in range(0, len((self.word_list)[0])):
             self.word_d[self.word_list[0][idx]]=self.freq_list[0][idx]
     
+
     def All_Process(self):
         
         top_dic={}
@@ -49,10 +50,11 @@ class TF_IDF():
         idf_d=self.compute_idf()
 
         tf_d=self.compute_tf(self.word_list[0], self.freq_list[0])
-
+        cnt=0
         for word,tfval in tf_d.items():
-            top_dic[word]=tfval*idf_d[word]
-
+            cnt+=1
+            top_dic[word]=tfval*idf_d[word] 
+           
         return top_dic
 
     def GetTop10(self):
@@ -84,7 +86,7 @@ class TF_IDF():
             bow.add(other_key[i])
         
         tf_d={}
-
+     
         for word,cnt in wordcount_d.items():
             tf_d[word]=cnt/float(len(bow))
         return tf_d
@@ -117,11 +119,17 @@ if __name__ == "__main__":
     url = "http://cassandra.apache.org/" # 찾고자 하는 url
     input_url="http://archiva.apache.org/"
     a="http://directory.apache.org/"
+    b="http://madlib.apache.org/"
 
-    instance = TF_IDF(a, es_host, es_port)
+    instance = TF_IDF(input_url, es_host, es_port)
     top10=instance.GetTop10()
 
     for tup in top10:
         print("word: %10s\ttf-idf: %.10f" %(tup[0], tup[1]))
 
     #es.indices.delete(index='urls', ignore=[400,404])
+
+    es=Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
+    query={ "query":{"bool":{"must":[{"match_all":{}}]}}}
+    result=es.search(index="urls", body=query)
+
