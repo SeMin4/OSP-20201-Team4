@@ -9,6 +9,7 @@ class Url_Similarity():
     def __init__(self, url, es_host, es_port):
         self.url=url
         self.id=0
+        self.size=0
         self.word_list=[]
         self.word_d={}
         self.other_d={}
@@ -21,6 +22,9 @@ class Url_Similarity():
         query ={"query":{"bool":{"must":{"match":{"url": self.url}}}},
             "_source":["url", "words", "frequencies"]}
         result=self.es.search(index="urls", body=query, size=1)
+
+        self.size=result['hits']['total']['value']
+    
         for res in result['hits']['hits']:
             self.id=res['_id']
             self.word_list=res['_source']['words']
@@ -33,9 +37,9 @@ class Url_Similarity():
         cos_dic={}
         self.Process_Own_Sentence()
         query={ "query":{"bool":{"must":[{"match_all":{}}],
-            "must_not":[{"match": {"id": str(self.id)}}]}}}
+            "must_not":[{"match": {"id": str(self.id)}}]}}, "size": str(self.size)}
         result=self.es.search(index="urls", body=query)
-
+    
         for res in result["hits"]["hits"]:
             other_url=res['_source']['url']
             if(other_url==self.url):
