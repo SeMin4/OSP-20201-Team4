@@ -120,8 +120,9 @@ if __name__ == "__main__":
     input_url="http://archiva.apache.org/"
     a="http://directory.apache.org/"
     b="http://madlib.apache.org/"
+    c="http://openoffice.apache.org"
 
-    instance = TF_IDF(input_url, es_host, es_port)
+    instance = TF_IDF(c, es_host, es_port)
     top10=instance.GetTop10()
 
     for tup in top10:
@@ -133,3 +134,5 @@ if __name__ == "__main__":
     query={ "query":{"bool":{"must":[{"match_all":{}}]}}}
     result=es.search(index="urls", body=query)
 
+    for res in result['hits']['hits']:
+        print(res)
