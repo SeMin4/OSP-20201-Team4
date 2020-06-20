@@ -1,4 +1,4 @@
-https://img.shields.io/badge/OpenSource-Project-lightblue
+https://img.shields.io/badge/OpenSource-Project-lightblue.svg
 # Opensource Programming Team Project
 ## Team4 - Web Data Similarity Analysis
 
