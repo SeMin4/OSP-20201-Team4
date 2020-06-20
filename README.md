@@ -1,6 +1,3 @@
-# OSP-20201-Team4
-OSP Team4의 Web Data Similarity Analysis
-
 # Opensource Programming Team Project
 ## Team4 - Web Data Similarity Analysis
 
