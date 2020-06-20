@@ -1,5 +1,0 @@
-http://madlib.apache.org/
-http://archiva.apache.org/
-http://camel.apache.org/
-http://openoffice.apache.org/
-http://camel.apache.org/

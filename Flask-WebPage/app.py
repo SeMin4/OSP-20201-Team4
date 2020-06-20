@@ -8,14 +8,14 @@ from werkzeug.utils import secure_filename
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from MakeWordCloud import Word_Cloud
+from py_pkg.MakeWordCloud import Word_Cloud
 
-import crawling
 import json
 
-from tfidf import TF_IDF
-from cosinesimilarity import Url_Similarity
-from dbtocsv import ToCsv
+from py_pkg.tfidf import TF_IDF
+from py_pkg.crawling import Crawling
+from py_pkg.cosinesimilarity import Url_Similarity
+from py_pkg.dbtocsv import ToCsv
 
 
 app = Flask(__name__)
@@ -26,35 +26,19 @@ def index():
 
 @app.route('/upload/File', methods=['GET', 'POST'])
 def uploadFile():
-	error = None
-	if request.method == 'GET':
-		url = request.args.get('url')
-		id = request.args.get('id')
-		url_list = []		
-		url_list.append(url)
-		"""
-		url = request.form['url']	
-		url_list.append(url)		
-		"""
-		result = crawling.main(url_list,id)
-		
-		return json.dumps(result)
-		
-	elif request.method == 'POST':
-		url_list = []		
+    error = None
+    es_host="127.0.0.1"
+    es_port="9200"
+    if request.method == 'GET':
+        url = request.args.get('url')
+        id = request.args.get('id')
+        crawling_url = Crawling(url,id, es_host, es_port)
+        result = crawling_url.word_processing()
+        print(result)
 
-		f = request.files['file']
-		f.save(secure_filename(f.filename))
-		f1 = open(f.filename,'r')
-		url_list = f1.readlines()
-		f1.close()
-		"""
-		url = request.form['url']	
-		url_list.append(url)		
-		"""
-		result = crawling.main(url_list)
-		return render_template('index.html', len = len(result), results = result)
-
+        return json.dumps(result)
+		
+	
 
 @app.route('/analysis/tfidf', methods=['GET'])
 def tfidfAnalysis() :

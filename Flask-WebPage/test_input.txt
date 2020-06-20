@@ -1,3 +1,0 @@
-http://archiva.apache.org/
-http://directory.apache.org/
-http://madlib.apache.org/

@@ -49,6 +49,9 @@ $("#csvDownBtn").click(function (event){
       reader.addEventListener("loadend", function() {
         results = reader.result;//파일 내용 읽기 끝!
         var result = results.split("\n")
+        for(var i = 0 ; i < result.length; ++i){
+          result[i] = result[i].trim()
+        }
         console.log(result)
         var id = 1;
         var check = true
@@ -61,7 +64,7 @@ $("#csvDownBtn").click(function (event){
               resultRow.innerHTML = ""
               resultRow.innerHTML = "<button type='button' class='btn btn-warning btn-circle btn-md' disabled>중복</button>"
               check = false
-              break;
+              
             }
           }
           if(!check)
@@ -163,6 +166,48 @@ $("#csvDownBtn").click(function (event){
           },
           success : function(data){
               console.log(data)
+              tfIDFchart.data = [
+                {
+                  "word": data["word"][0],
+                  "tfidf": data["percent"][0]
+                },
+                {
+                  "word": data["word"][1],
+                  "tfidf": data["percent"][1]
+                },
+                {
+                  "word": data["word"][2],
+                  "tfidf": data["percent"][2]
+                },
+                {
+                  "word": data["word"][3],
+                  "tfidf": data["percent"][3]
+                },
+                {
+                  "word": data["word"][4],
+                  "tfidf": data["percent"][4]
+                },
+                {
+                  "word": data["word"][5],
+                  "tfidf": data["percent"][5]
+                },
+                {
+                  "word": data["word"][6],
+                  "tfidf": data["percent"][6]
+                },
+                {
+                  "word": data["word"][7],
+                  "tfidf": data["percent"][7]
+                },
+                {
+                  "word": data["word"][8],
+                  "tfidf": data["percent"][8]
+                },
+                {
+                  "word": data["word"][9],
+                  "tfidf": data["percent"][9]
+                }
+              ]
               for(var i = 1; i <= 10; ++i){
                   var topword = document.getElementById("topWord"+i);
                   topword.innerHTML = data["word"][i - 1]
@@ -194,7 +239,7 @@ $("#csvDownBtn").click(function (event){
                   "similiarity": data["percent"][2]*100
                 }
               ]
-              for(var i = 1; i < 3; ++i){
+              for(var i = 1; i <= 3; ++i){
                   var topURL = document.getElementById("cosineURL"+i)
                   topURL.innerHTML = data["url"][i - 1]
               }

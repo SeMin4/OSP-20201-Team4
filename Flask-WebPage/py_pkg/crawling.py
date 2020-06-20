@@ -15,7 +15,7 @@ import time
 
 
 
-class Crawling():
+class Crawling() :
 	def __init__(self, input_url,id,es_host,es_port):
 		self.__input_url = input_url
 		self.__id = id
@@ -23,10 +23,10 @@ class Crawling():
 		self.__words = []
 		self.__frequencies = []
 		self.__word_d = {}
-		
 
 	def process_timer(self):
-		return time.time()
+		return time.time()	
+
 	def del_symbols(self, my_lines):
 		marks = [',', '!',':','.','#','$','%','^','&','*','(',')','+','-','/','[',']','{','}','\\','\'',';','<','>','0','1','2','3','4','5','6','7','8','9','\n','"','’','_','~','?','|','@','©']
 		h = 0
@@ -71,6 +71,7 @@ class Crawling():
 				result.append(w)
 	
 		return result	#stop words 제거한 word lists
+		
 	def add_word(self, wlist,word_d):
 	
 		for w in wlist:		# word_d 딕셔너리에 단어, 빈도 수 추가
@@ -83,7 +84,7 @@ class Crawling():
 
 		start = self.process_timer()		
 		#urladdress = 'u'+'\''+url.strip()+'\''		
-		urladdress = input_url.strip()		
+		urladdress = self.__input_url.strip()		
 		ress = requests.get(urladdress)	
 		html = BeautifulSoup(ress.content, "html.parser")
 	
@@ -101,8 +102,8 @@ class Crawling():
 		self.__frequencies = list(self.__word_d.values())		#dict.values() -> frequency list
 		print(len(self.__word_d))	
 
-		dic = dict(url=urladdress, words = self.__words, frequencies = self.__frequencies, wordcnt = 		len(self.__words),processing_time = ptime)
-		dic2 = dict(id= id, url=urladdress, wordcnt = len(self.__words),processing_time = round(ptime,5))
+		dic = dict(url=urladdress, words = self.__words, frequencies = self.__frequencies, wordcnt = len(self.__words),processing_time = ptime)
+		dic2 = dict(id= self.__id, url=urladdress, wordcnt = len(self.__words),processing_time = round(ptime,5))
 	
 		e = json.dumps(dic)
 		res = self.es.index(index='urls', doc_type='url',id=self.__id, body=e)
@@ -129,11 +130,5 @@ if __name__ == "__main__":
 	id = 1 
 	crawling_url = Crawling(input_url,id, es_host, es_port)
 	dic = crawling_url.word_processing()
-    
 	print(dic)
     
-
-
-
-	
-	
