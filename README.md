@@ -2,7 +2,7 @@
 ## Team4 - Web Data Similarity Analysis
 
 ### What we do?
-현재 웹상에 있는 데이터들을 HTTP REQUEST METHOD(GET, POST..) 등을 통해서 웹상의 데이터들을 모으고 이것을 자연어 처리 라이브러리를 통해서 데이터를 분석합니다.예상 웹페이지의 메인 페이지의 화면은 아래와 같습니다.
+현재 웹상에 있는 데이터들을 HTTP REQUEST METHOD(GET, POST..) 등을 통해서 웹상의 데이터들을 모으고 이것을 자연어 처리 라이브러리를 통해서 데이터를 분석합니다. 웹페이지의 메인 페이지의 화면은 아래와 같습니다.
 
 ![mainpage](https://user-images.githubusercontent.com/45915619/85197796-6306c400-b31e-11ea-8cf1-36bbb2ac8d92.png)
 
